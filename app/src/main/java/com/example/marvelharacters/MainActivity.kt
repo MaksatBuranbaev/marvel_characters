@@ -16,22 +16,32 @@ import com.example.marvelharacters.ui.theme.MarvelСharactersTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +73,14 @@ class MainActivity : ComponentActivity() {
                         {
                             Title()
                         }
-                        CharactersView(name = "Deadpool", img = R.drawable.images)
+                        var characters = listOf(Character("Deadpool", R.drawable.deadpool), Character("Iron Man", R.drawable.iron_man))
+                        LazyRow(modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.CenterHorizontally), horizontalArrangement = Arrangement.SpaceBetween) {
+                            items(characters) { character ->
+                                CharacterImage(name = character.name, img = character.image)
+                            }
+                        }
                     }
                 }
             }
@@ -93,24 +110,22 @@ private fun Title(){
 }
 
 @Composable
-private fun CharactersView(name: String, img: Int){
-    Row(modifier = Modifier
+private fun CharacterImage(name: String, img: Int){
+    Box(contentAlignment = Alignment.BottomStart, modifier = Modifier
         .fillMaxSize()
-        .padding(start = 40.dp, end = 40.dp, top = 20.dp, bottom = 60.dp)
-        .paint(
-            painterResource(id = img),
-            contentScale = ContentScale.FillBounds) ) {
+        .padding(start = 30.dp, end = 30.dp, top = 20.dp, bottom = 60.dp)
+        ) {
+        Image(painter = painterResource(id = img), contentDescription = null, modifier =  Modifier
+            .size(360.dp, 800.dp)
+        )
         Text(text = name, color = Color.White, fontSize = 32.sp, modifier = Modifier
-            .align(alignment = Alignment.Bottom)
             .padding(start = 30.dp, bottom = 50.dp))
     }
 }
 
 
-//class Character(val n: String, img: Int,)
-//{
-//    val name = n
-//    val image = img
-//}
-//
-//var characters = listOf(Character("Deadpool", R.drawable.images))
+data class Character
+(
+    val name: String,
+    val image: Int,
+)
