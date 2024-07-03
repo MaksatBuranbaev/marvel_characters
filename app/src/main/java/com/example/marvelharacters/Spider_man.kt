@@ -20,25 +20,37 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun Spider_man(navController: NavController){
-    Box(modifier = Modifier
-        .fillMaxSize()){
-        Image(painter = painterResource(id = R.drawable.sp), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier
+fun Spider_man(navController: NavController) {
+    Box(
+        modifier = Modifier
             .fillMaxSize()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.sp),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
         )
-        Column (modifier = Modifier
-            .align(Alignment.BottomStart)){
-            Text(text = "Spider-Man", color = Color.White, fontSize = 32.sp, modifier = Modifier
-                .padding(start = 30.dp, top = 20.dp))
-            Text(text = "In iron suit", color = Color.White, fontSize = 24.sp, modifier = Modifier
-                .padding(start = 30.dp, end = 30.dp, top = 20.dp, bottom = 40.dp))
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+        ) {
+            Text(
+                text = "Spider-Man", color = Color.White, fontSize = 32.sp, modifier = Modifier
+                    .padding(start = 30.dp, top = 20.dp)
+            )
+            Text(
+                text = "In iron suit", color = Color.White, fontSize = 24.sp, modifier = Modifier
+                    .padding(start = 30.dp, end = 30.dp, top = 20.dp, bottom = 40.dp)
+            )
         }
         Image(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = null,
             modifier = Modifier
                 .padding(vertical = 32.dp, horizontal = 16.dp)
-                .clickable{
+                .clickable {
                     navController.navigate(route = "home")
                 }
         )
