@@ -14,74 +14,91 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.marvelharacters.ui.theme.MarvelСharactersTheme
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             MarvelСharactersTheme {
-                Scaffold{ padding ->
-                    Column(horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding)
-                            .paint(
-                                // Replace with your image id
-                                painterResource(id = R.drawable.background),
-                                contentScale = ContentScale.FillBounds
-                            )){
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            /*.background(Color.Red)*/,
-                            horizontalArrangement = Arrangement.Center)
-                        {
-                            Logo()
-                        }
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            /*.background(Color.Yellow)*/,
-                            horizontalArrangement = Arrangement.Center)
-                        {
-                            Title()
-                        }
-                        var characters = listOf(Character("Deadpool", R.drawable.deadpool), Character("Iron Man", R.drawable.iron_man))
-                        LazyRow(modifier = Modifier
-                            .fillMaxSize()
-                            .align(Alignment.CenterHorizontally), horizontalArrangement = Arrangement.SpaceBetween) {
-                            items(characters) { character ->
-                                CharacterImage(name = character.name, img = character.image)
-                            }
-                        }
+                NavHost(navController = navController, startDestination = "home") {
+                    composable("home") {
+                        Home(navController)
                     }
+                    composable("deadpool") {
+                        Deadpool(navController)
+                    }
+                    composable("iron man") {
+                        Iron_man(navController)
+                    }
+                    composable("spider-man") {
+                        Spider_man(navController)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Home(navController: NavController){
+        Scaffold{ padding ->
+            Column(horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .paint(
+                        painterResource(id = R.drawable.background),
+                        contentScale = ContentScale.FillBounds
+                    )){
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    /*.background(Color.Red)*/,
+                    horizontalArrangement = Arrangement.Center)
+                {
+                    Logo()
+                }
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    /*.background(Color.Yellow)*/,
+                    horizontalArrangement = Arrangement.Center)
+                {
+                    Title()
+                }
+                var characters = listOf(Character("Deadpool", R.drawable.deadpool), Character("Iron Man", R.drawable.iron_man), Character("Spider-Man", R.drawable.sp))
+                LazyRow(modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.CenterHorizontally), horizontalArrangement = Arrangement.SpaceBetween) {
+                    items(characters) { character ->
+                        CharacterImage(name = character.name, img = character.image, navagationController = navController)
                 }
             }
         }
@@ -110,19 +127,23 @@ private fun Title(){
 }
 
 @Composable
-private fun CharacterImage(name: String, img: Int){
+private fun CharacterImage(name: String, img: Int, navagationController: NavController){
     Box(contentAlignment = Alignment.BottomStart, modifier = Modifier
         .fillMaxSize()
         .padding(start = 30.dp, end = 30.dp, top = 20.dp, bottom = 60.dp)
         ) {
-        Image(painter = painterResource(id = img), contentDescription = null, modifier =  Modifier
+        Image(painter = painterResource(id = img), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier
             .size(360.dp, 800.dp)
+            .padding(horizontal = 10.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .clickable {
+                navagationController.navigate(route = name.lowercase())
+            }
         )
         Text(text = name, color = Color.White, fontSize = 32.sp, modifier = Modifier
-            .padding(start = 30.dp, bottom = 50.dp))
+            .padding(start = 30.dp, bottom = 40.dp))
     }
 }
-
 
 data class Character
 (
